@@ -1,4 +1,5 @@
-package comhuaweikai.androidkotlinutils
+@file:Suppress("unused")
+package com.huaweikai.androidkotlinutils
 
 import androidx.recyclerview.widget.DiffUtil
 import java.lang.reflect.Field
@@ -64,20 +65,16 @@ inline val <reified T : Any> Class<T>.diffUtil: DiffUtil.ItemCallback<T>
             }
 
             override fun areItemsTheSame(oldItem: T, newItem: T): Boolean {
-                if (itemsTheSame == null) {
-                    return oldItem == newItem
-                }
-                val oItem = itemsTheSame!!.get(oldItem)
-                val nItem = itemsTheSame!!.get(newItem)
+                val itemsTheSame = this.itemsTheSame ?: return oldItem == newItem
+                val oItem = itemsTheSame.get(oldItem)
+                val nItem = itemsTheSame.get(newItem)
                 return oItem == nItem
             }
 
             override fun areContentsTheSame(oldItem: T, newItem: T): Boolean {
-                if (contentsTheSame == null) {
-                    return oldItem == newItem
-                }
-                val oItem = contentsTheSame!!.get(oldItem)
-                val nItem = contentsTheSame!!.get(newItem)
+                val contentsTheSame = this.contentsTheSame ?: return oldItem == newItem
+                val oItem = contentsTheSame.get(oldItem)
+                val nItem = contentsTheSame.get(newItem)
                 return oItem == nItem
             }
         }

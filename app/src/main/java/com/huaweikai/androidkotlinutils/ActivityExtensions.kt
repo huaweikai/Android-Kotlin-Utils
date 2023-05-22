@@ -1,6 +1,8 @@
-package comhuaweikai.androidkotlinutils
+@file:Suppress("unused")
+package com.huaweikai.androidkotlinutils
 
 import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.os.Build
@@ -8,9 +10,11 @@ import android.util.Log
 import android.view.PixelCopy
 import android.view.View
 import android.view.WindowInsetsController
+import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
+import androidx.fragment.app.FragmentManager
 import androidx.palette.graphics.Palette
 
 
@@ -95,4 +99,43 @@ private fun AppCompatActivity.screenShotWithO(): Bitmap {
 
 private fun AppCompatActivity.screenShotMinO(): Bitmap {
     return window.decorView.drawToBitmap()
+}
+
+fun ActivityResultLauncher<Intent>.selectImage() {
+    val intent = Intent(Intent.ACTION_GET_CONTENT)
+    intent.addCategory(Intent.CATEGORY_OPENABLE)
+    intent.type = "image/*"
+    launch(intent)
+}
+
+fun ActivityResultLauncher<Intent>.selectImages() {
+    val intent = Intent(Intent.ACTION_GET_CONTENT)
+    intent.addCategory(Intent.CATEGORY_OPENABLE)
+    intent.type = "image/*"
+    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+    launch(intent)
+}
+
+fun ActivityResultLauncher<Intent>.selectFile() {
+    val intent = Intent(Intent.ACTION_GET_CONTENT)
+    intent.addCategory(Intent.CATEGORY_OPENABLE)
+    intent.type = "*/*"
+    launch(intent)
+}
+
+fun ActivityResultLauncher<Intent>.selectAudio() {
+    val intent = Intent(Intent.ACTION_GET_CONTENT)
+    intent.addCategory(Intent.CATEGORY_OPENABLE)
+    intent.type = "audio/*"
+    launch(intent)
+}
+
+
+/**
+ * 清空FragmentManager返回栈
+ */
+fun FragmentManager.clearFragmentManagerBackStack() {
+    for (i in 0 until backStackEntryCount) {
+        popBackStack()
+    }
 }

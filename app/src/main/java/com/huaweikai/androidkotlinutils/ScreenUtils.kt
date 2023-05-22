@@ -1,4 +1,4 @@
-package comhuaweikai.androidkotlinutils
+package com.huaweikai.androidkotlinutils
 
 import android.annotation.SuppressLint
 import android.content.Context

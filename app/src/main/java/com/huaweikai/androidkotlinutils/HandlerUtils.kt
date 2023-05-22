@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package comhuaweikai.androidkotlinutils
+package com.huaweikai.androidkotlinutils
 
 import android.os.Build.VERSION.SDK_INT
 import android.os.Handler
