@@ -16,8 +16,7 @@ val mainThread: Thread = mainLooper.thread
 val isMainThread: Boolean inline get() = mainThread === Thread.currentThread()
 
 @PublishedApi
-internal val currentThread: Any?
-    inline get() = Thread.currentThread()
+internal val currentThread: Any? inline get() = Thread.currentThread()
 
 val mainHandler: Handler by lazy {
     if (SDK_INT >= 28) Handler.createAsync(mainLooper) else try {

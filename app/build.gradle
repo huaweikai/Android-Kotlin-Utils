@@ -40,4 +40,5 @@ dependencies {
     implementation 'androidx.palette:palette-ktx:1.0.0'
     implementation 'androidx.activity:activity-ktx:1.7.1'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.21'
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
 }

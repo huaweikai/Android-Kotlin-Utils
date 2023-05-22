@@ -1,4 +1,5 @@
 @file:Suppress("unused")
+
 package com.huaweikai.androidkotlinutils
 
 import androidx.lifecycle.Lifecycle
@@ -7,6 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
@@ -64,3 +67,23 @@ val LifecycleOwner.isCreated: Boolean
  */
 val LifecycleOwner.isStarted: Boolean
     get() = this.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
+
+
+fun <T> Flow<T>.observe(
+    lifecycleOwner: LifecycleOwner,
+    state: Lifecycle.State = Lifecycle.State.STARTED,
+    block: (data: T) -> Unit
+) {
+    lifecycleOwner.lifecycleScope.launch {
+        lifecycleOwner.repeatOnLifecycle(state) {
+            this@observe.collectLatest(block::invoke)
+        }
+    }
+}
+
+fun <T> Flow<T>.observe(
+    lifecycleOwner: LifecycleOwner,
+    block: (data: T) -> Unit
+) {
+    this.observe(lifecycleOwner, state = Lifecycle.State.STARTED, block = block::invoke)
+}
