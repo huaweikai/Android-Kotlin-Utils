@@ -13,6 +13,7 @@ import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
@@ -20,6 +21,7 @@ import androidx.core.text.buildSpannedString
 import androidx.core.view.drawToBitmap
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.transition.TransitionManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -147,4 +149,16 @@ fun View.checkOnSubThread(
             cutBitmap.recycle()
         }
     }
+}
+
+/**
+ * 可以在View发生变化时，自动添加动画
+ */
+inline fun <reified T: View> T.updateWithAnimate(block: T.() -> Unit) {
+    val parent = this.parent as? ViewGroup ?: run {
+        block.invoke(this)
+        return
+    }
+    TransitionManager.beginDelayedTransition(parent)
+    block.invoke(this)
 }

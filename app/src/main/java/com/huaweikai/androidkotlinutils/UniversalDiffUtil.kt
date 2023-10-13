@@ -33,9 +33,9 @@ annotation class ContentsTheSame
  */
 inline val <reified T : Any> Class<T>.diffUtil: DiffUtil.ItemCallback<T>
     get() {
-        return object : DiffUtil.ItemCallback<T>() {
+        return object :DiffUtil.ItemCallback<T>() {
             var itemsTheSame: Field? = null
-            var contentsTheSame: Field? = null
+            var contentsTheSame: MutableList<Field> = mutableListOf()
 
             init {
                 for (declaredField in this@diffUtil.declaredFields) {
@@ -56,11 +56,8 @@ inline val <reified T : Any> Class<T>.diffUtil: DiffUtil.ItemCallback<T>
 
             private fun disposeContentsTheSame(field: Field) {
                 if (field.getAnnotation(ContentsTheSame::class.java) != null) {
-                    if (contentsTheSame != null) {
-                        throw RuntimeException("一个类只能有一个ContentsTheSame")
-                    }
                     field.isAccessible = true
-                    contentsTheSame = field
+                    contentsTheSame.add(field)
                 }
             }
 
@@ -72,10 +69,12 @@ inline val <reified T : Any> Class<T>.diffUtil: DiffUtil.ItemCallback<T>
             }
 
             override fun areContentsTheSame(oldItem: T, newItem: T): Boolean {
-                val contentsTheSame = this.contentsTheSame ?: return oldItem == newItem
-                val oItem = contentsTheSame.get(oldItem)
-                val nItem = contentsTheSame.get(newItem)
-                return oItem == nItem
+                this.contentsTheSame.forEach { field ->
+                    if (field.get(oldItem) != field.get(newItem)) {
+                        return false
+                    }
+                }
+                return true
             }
         }
     }
